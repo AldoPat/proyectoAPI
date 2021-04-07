@@ -19,6 +19,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 // app.use(bodyParser.raw({type: "image/*",limit:'1mb'}));
 
+app.use(express.static("public"));
 //configurar cabecera http
 app.use(cors(), (req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
@@ -56,7 +57,7 @@ app.use("/api", codigo_routes);
 app.use("/api", codigoAlbum_routes);
 
 app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "bin/index.html"));
+  res.sendFile(path.resolve(__dirname, "public/index.html"));
 });
 app.get("/prueba", function (req, res) {
   res.status(200).send({ message: "El servicio Fucniona Correctamente" });
