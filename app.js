@@ -2,8 +2,9 @@
 
 var express = require("express");
 var bodyParser = require("body-parser");
-
+const multer = require("multer");
 var app = express();
+const path = require("path");
 
 //cargar rutas
 var user_routes = require("./router/user");
@@ -20,6 +21,7 @@ app.use(bodyParser.json());
 // app.use(bodyParser.raw({type: "image/*",limit:'1mb'}));
 
 app.use(express.static("public"));
+
 //configurar cabecera http
 app.use(cors(), (req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
@@ -34,20 +36,19 @@ app.use(cors(), (req, res, next) => {
 });
 
 //
+// app.use(express.urlencoded({ extended: false }));
+// const storage = multer.diskStorage({
+//   destination: path.join(__dirname, "/uploads/artist"),
+//   filename: (req, file, cb, filename) => {
+//     console.log(file);
+//     cb(null, new Date().getTime() + path.extname(file.originalname));
+//   },
+// });
+// app.use(multer({ storage }).single("image"));
+// cb(null, uuid() + path.extname(file.originalname));
 
-/*
-(req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Authorization,X-API-KEY,Origin,X-Requested-With,Content-Type,Accept,Acces-Control-Allow-Request-Method"
-  );
-  res.header("Access-Control-Allow-Methods", "GET,POST,OPTIONS,PUT,DELETE");
-  res.header("Allow", "GET,POST,OPTIONS,PUT,DELETE");
+//
 
-  next();
-}
-*/
 //rutas base
 app.use("/api", user_routes);
 app.use("/api", artist_routes);

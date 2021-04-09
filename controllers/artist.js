@@ -133,16 +133,26 @@ function deleteArtist(req, res) {
     }
   });
 }
-
+const cloudinary = require("cloudinary");
+cloudinary.config({
+  cloud_name: "dcah2bjwb",
+  api_key: "481617882575422",
+  api_secret: "DIRMqXg11pmR5yPj1gVnO3qjAp0",
+});
+// async
 function uploadImage(req, res) {
   var artistId = req.params.id;
-  var file_name = "No subido...";
+  // var file_name = "No subido...";
+  var file_name = req.params.image;
+  const file = req.files.image;
+  console.log(req.files);
+
+  var cloudinary = require("cloudinary").v2;
 
   if (req.files) {
     var file_path = req.files.image.path;
     var file_split = file_path.split("\\");
     var file_name = file_split[2];
-
     var ext_split = file_name.split(".");
     var file_ext = ext_split[1];
 
@@ -163,6 +173,13 @@ function uploadImage(req, res) {
               .status(404)
               .send({ message: "No se ha podido actualizar el usuario" });
           } else {
+            cloudinary.uploader.upload(
+              file.tempFilePath,
+              function (err, result) {
+                console.log("Error", err);
+                console.log("REsult", result);
+              }
+            );
             res.status(200).send({ artist: artistUpdated });
           }
         }
@@ -170,12 +187,13 @@ function uploadImage(req, res) {
     } else {
       res.status(200).send({ message: "Entension del archivo no valido" });
     }
-
-    // console.log(ext_split);
   } else {
     res.status(200).send({ message: "No se ha subido ninguna imagen" });
   }
 }
+
+// await cloudinary.v2.uploader.upload(req, file.path);
+// console.log(ext_split);
 
 function getImageFile(req, res) {
   var imageFile = req.params.imageFile;
